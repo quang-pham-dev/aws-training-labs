@@ -1,0 +1,721 @@
+<!doctype html>
+<html lang="en">
+
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width,initial-scale=1">
+  <title>AWS Training · W01 D01 · Interactive Lab</title>
+  <style>
+    :root {
+      color-scheme: dark;
+      --bg: #0b1120;
+      --panel: #141e31;
+      --panel2: #1b2940;
+      --line: #30425d;
+      --txt: #eaf2ff;
+      --muted: #a9bdd5;
+      --orange: #ffad4b;
+      --cyan: #67d8e7;
+      --green: #79e4ae;
+      --red: #ff8b93
+    }
+
+    * {
+      box-sizing: border-box
+    }
+
+    html {
+      scroll-behavior: smooth
+    }
+
+    body {
+      margin: 0;
+      background: radial-gradient(ellipse at 80% 0%, #173455 0, transparent 36%), var(--bg);
+      color: var(--txt);
+      font: 15px/1.6 system-ui, -apple-system, BlinkMacSystemFont, "Segoe UI", sans-serif
+    }
+
+    a {
+      color: var(--cyan)
+    }
+
+    button,
+    input,
+    textarea {
+      font: inherit
+    }
+
+    button {
+      cursor: pointer
+    }
+
+    button:focus-visible,
+    a:focus-visible,
+    input:focus-visible,
+    textarea:focus-visible {
+      outline: 3px solid var(--orange);
+      outline-offset: 3px
+    }
+
+    .shell {
+      max-width: 1120px;
+      margin: auto;
+      padding: 24px
+    }
+
+    .top {
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+      gap: 12px;
+      flex-wrap: wrap
+    }
+
+    .brand {
+      font-size: 14px;
+      font-weight: 800;
+      letter-spacing: .1em;
+      color: var(--orange)
+    }
+
+    .chip {
+      display: inline-flex;
+      align-items: center;
+      gap: 6px;
+      border: 1px solid var(--line);
+      border-radius: 999px;
+      padding: 5px 11px;
+      color: var(--muted);
+      font-size: 12px
+    }
+
+    .hero {
+      padding: 52px 0 32px;
+      max-width: 820px
+    }
+
+    .eyebrow {
+      font-weight: 700;
+      color: var(--cyan);
+      letter-spacing: .1em;
+      font-size: 12px;
+      text-transform: uppercase
+    }
+
+    h1 {
+      font-size: clamp(32px, 5vw, 58px);
+      line-height: 1.08;
+      letter-spacing: -.04em;
+      margin: 12px 0 20px
+    }
+
+    h2 {
+      font-size: 26px;
+      letter-spacing: -.025em;
+      margin: 0 0 10px
+    }
+
+    h3 {
+      font-size: 17px;
+      margin: 0 0 10px
+    }
+
+    .lead {
+      font-size: 18px;
+      color: var(--muted);
+      max-width: 680px
+    }
+
+    .meta {
+      display: flex;
+      gap: 10px;
+      flex-wrap: wrap;
+      margin-top: 22px
+    }
+
+    .layout {
+      display: grid;
+      grid-template-columns: 225px 1fr;
+      gap: 26px
+    }
+
+    .sidebar {
+      position: sticky;
+      top: 20px;
+      align-self: start
+    }
+
+    .nav {
+      display: grid;
+      gap: 7px
+    }
+
+    .nav a {
+      text-decoration: none;
+      color: var(--muted);
+      padding: 10px 12px;
+      border-radius: 9px
+    }
+
+    .nav a:hover {
+      background: var(--panel2);
+      color: white
+    }
+
+    .card {
+      background: linear-gradient(150deg, #17233a, #111b2d);
+      border: 1px solid var(--line);
+      border-radius: 16px;
+      padding: 24px;
+      margin-bottom: 22px;
+      box-shadow: 0 12px 40px #0002
+    }
+
+    .muted {
+      color: var(--muted)
+    }
+
+    .small {
+      font-size: 13px
+    }
+
+    .steps {
+      display: flex;
+      gap: 7px;
+      flex-wrap: wrap;
+      margin: 20px 0
+    }
+
+    .step {
+      background: #223249;
+      border: 1px solid #3b5069;
+      border-radius: 8px;
+      padding: 7px 12px;
+      font-size: 12px
+    }
+
+    .grid {
+      display: grid;
+      grid-template-columns: repeat(3, 1fr);
+      gap: 12px
+    }
+
+    .mini {
+      border: 1px solid var(--line);
+      background: #1b2940;
+      border-radius: 12px;
+      padding: 17px
+    }
+
+    .mini strong {
+      display: block;
+      font-size: 16px;
+      color: #fff
+    }
+
+    .mini p {
+      font-size: 13px;
+      margin-bottom: 0;
+      color: var(--muted)
+    }
+
+    .diagram {
+      border: 1px solid var(--line);
+      border-radius: 12px;
+      background: #0c1728;
+      padding: 16px;
+      overflow: auto;
+      margin: 16px 0
+    }
+
+    .diagram svg {
+      width: 100%;
+      height: auto;
+      min-width: 470px
+    }
+
+    .diagram text {
+      font-family: system-ui, sans-serif;
+      fill: #edf5ff
+    }
+
+    .diagram .sub {
+      fill: #a9bdd5
+    }
+
+    .region {
+      fill: #10253a;
+      stroke: #5583a6;
+      stroke-width: 2;
+      stroke-dasharray: 6 5
+    }
+
+    .az {
+      fill: #143d42;
+      stroke: #50c6bf;
+      stroke-width: 2
+    }
+
+    .node {
+      fill: #203652;
+      stroke: #7899bc;
+      stroke-width: 1.5
+    }
+
+    .connector {
+      stroke: #ffad4b;
+      stroke-width: 2;
+      fill: none
+    }
+
+    .callout {
+      border-left: 3px solid var(--orange);
+      padding: 12px 16px;
+      background: #30281e;
+      border-radius: 0 8px 8px 0;
+      margin: 15px 0
+    }
+
+    .btn {
+      background: var(--orange);
+      border: 0;
+      color: #172133;
+      padding: 11px 17px;
+      font-weight: 800;
+      border-radius: 9px
+    }
+
+    .btn.secondary {
+      background: #253c57;
+      color: #eaf2ff;
+      border: 1px solid #4b6785
+    }
+
+    .btn:disabled {
+      opacity: .45;
+      cursor: not-allowed
+    }
+
+    .row {
+      display: flex;
+      align-items: center;
+      gap: 10px;
+      flex-wrap: wrap
+    }
+
+    .progress {
+      height: 9px;
+      background: #293a52;
+      border-radius: 9px;
+      overflow: hidden
+    }
+
+    .progress span {
+      display: block;
+      height: 100%;
+      width: 0;
+      background: linear-gradient(90deg, var(--cyan), var(--green));
+      transition: width .2s
+    }
+
+    .question {
+      border-top: 1px solid var(--line);
+      padding: 19px 0
+    }
+
+    .question:first-child {
+      border: 0
+    }
+
+    .question fieldset {
+      border: 0;
+      padding: 0;
+      margin: 0
+    }
+
+    .question legend {
+      font-weight: 700;
+      margin-bottom: 12px
+    }
+
+    .option {
+      display: block;
+      border: 1px solid var(--line);
+      background: #17253a;
+      border-radius: 10px;
+      padding: 10px 12px;
+      margin: 8px 0;
+      cursor: pointer
+    }
+
+    .option:has(input:checked) {
+      border-color: var(--cyan);
+      background: #1a3849
+    }
+
+    .option input {
+      accent-color: var(--cyan);
+      margin-right: 9px
+    }
+
+    .feedback {
+      padding: 12px;
+      border-radius: 8px;
+      background: #23334b;
+      margin-top: 10px;
+      color: var(--muted)
+    }
+
+    .good {
+      color: var(--green)
+    }
+
+    .bad {
+      color: var(--red)
+    }
+
+    .checklist label {
+      display: flex;
+      gap: 10px;
+      padding: 10px 0;
+      border-bottom: 1px solid #29394d
+    }
+
+    .checklist input {
+      accent-color: var(--green);
+      width: 17px;
+      height: 17px;
+      flex-shrink: 0;
+      margin-top: 4px
+    }
+
+    textarea {
+      width: 100%;
+      min-height: 110px;
+      background: #0e1929;
+      border: 1px solid #455a73;
+      border-radius: 10px;
+      padding: 13px;
+      color: var(--txt);
+      resize: vertical
+    }
+
+    .answer {
+      display: none;
+      background: #1b3540;
+      border: 1px solid #3a7978;
+      border-radius: 10px;
+      padding: 13px;
+      margin-top: 10px
+    }
+
+    .answer.visible {
+      display: block
+    }
+
+    .pill {
+      display: inline-block;
+      padding: 4px 9px;
+      border-radius: 6px;
+      background: #1e4650;
+      color: #a3f3e7;
+      font-size: 12px;
+      font-weight: 700
+    }
+
+    .footer {
+      padding: 30px 0 60px;
+      color: var(--muted)
+    }
+
+    .next {
+      background: linear-gradient(110deg, #20384d, #203a37);
+      border-color: #427777
+    }
+
+    .hidden {
+      display: none !important
+    }
+
+    @media(max-width:760px) {
+      .layout {
+        display: block
+      }
+
+      .sidebar {
+        position: static;
+        margin-bottom: 20px
+      }
+
+      .nav {
+        display: flex;
+        overflow: auto
+      }
+
+      .nav a {
+        white-space: nowrap
+      }
+
+      .grid {
+        grid-template-columns: 1fr
+      }
+
+      .shell {
+        padding: 16px
+      }
+
+      .card {
+        padding: 18px
+      }
+
+      .hero {
+        padding: 28px 0
+      }
+
+      .diagram svg {
+        min-width: 450px
+      }
+    }
+
+    @media print {
+      body {
+        background: white;
+        color: black
+      }
+
+      .sidebar,
+      .btn {
+        display: none
+      }
+
+      .card {
+        box-shadow: none;
+        break-inside: avoid
+      }
+
+      h1,
+      h2,
+      h3 {
+        color: black
+      }
+    }
+  </style>
+</head>
+
+<body>
+  <div class="shell">
+    <header class="top">
+      <div class="brand">☁ AWS / ENGINEERING ACADEMY</div>
+      <div class="row"><span class="chip">WEEK 01 · DAY 01</span><span class="chip">$0 LAB</span><span class="chip">45
+          MIN</span></div>
+    </header>
+    <section class="hero">
+      <div class="eyebrow">Interactive learning lab · Fundamentals</div>
+      <h1>Build the foundation.<br><span style="color:var(--orange)">Think like a cloud architect.</span></h1>
+      <p class="lead">Explore AWS Regions, Availability Zones, edge locations, and the Shared Responsibility Model
+        through a real-world NestJS + Next.js ERP scenario.</p>
+      <div class="meta"><span class="chip">🌏 Vietnam-first ERP</span><span class="chip">🔒 No AWS account
+          required</span><span class="chip">🧩 3 exercises + 5-question quiz</span></div>
+    </section>
+    <div class="layout">
+      <aside class="sidebar">
+        <div class="card" style="padding:15px">
+          <div class="small muted" style="margin-bottom:9px">YOUR PROGRESS</div>
+          <div class="progress"><span id="progressFill"></span></div>
+          <p class="small" id="progressText" aria-live="polite">0 of 8 tasks complete</p>
+        </div>
+        <nav class="nav" aria-label="Lesson sections"><a href="#concepts">01 · Infrastructure</a><a
+            href="#availability">02 · Availability</a><a href="#security">03 · Responsibility</a><a href="#exercises">04
+            · Exercises</a><a href="#quiz">05 · Knowledge check</a><a href="#deliverables">06 · Deliverables</a><a
+            href="#next">Next day →</a></nav>
+      </aside>
+      <main>
+        <section id="concepts" class="card">
+          <div class="eyebrow">Part 01 · 00–10 min</div>
+          <h2>Global Infrastructure</h2>
+          <p class="muted">AWS uses geographically separated Regions, isolated Availability Zones, and distributed edge
+            locations to support global workloads.</p>
+          <div class="grid">
+            <div class="mini"><strong>🌍 Region</strong>
+              <p>Geographic area containing multiple AZs. Example: <code>ap-southeast-1</code> (Singapore).</p>
+            </div>
+            <div class="mini"><strong>🏢 Availability Zone</strong>
+              <p>One or more discrete data centers designed as an isolated failure domain.</p>
+            </div>
+            <div class="mini"><strong>⚡ Edge Location</strong>
+              <p>Delivery point closer to users, often used by CloudFront caching.</p>
+            </div>
+          </div>
+          <div class="diagram" role="img"
+            aria-label="AWS Singapore Region containing three Availability Zones, with users accessing an edge location">
+            <svg viewBox="0 0 680 230">
+              <rect class="region" x="230" y="12" width="435" height="204" rx="16" /><text x="250" y="38"
+                font-weight="700" font-size="16">Singapore Region · ap-southeast-1</text>
+              <rect class="node" x="10" y="75" width="95" height="70" rx="9" /><text x="57" y="104" text-anchor="middle"
+                font-size="13">ERP Users</text><text class="sub" x="57" y="124" text-anchor="middle"
+                font-size="12">Vietnam</text>
+              <rect class="node" x="128" y="75" width="83" height="70" rx="9" /><text x="170" y="103"
+                text-anchor="middle" font-size="12">Edge</text><text x="170" y="121" text-anchor="middle"
+                font-size="12">Location</text>
+              <path class="connector" d="M105 110 H128 M211 110 H240" />
+              <g>
+                <rect class="az" x="252" y="62" width="118" height="125" rx="11" />
+                <rect class="az" x="385" y="62" width="118" height="125" rx="11" />
+                <rect class="az" x="518" y="62" width="118" height="125" rx="11" /><text x="311" y="86"
+                  text-anchor="middle" font-weight="700">AZ A</text><text x="444" y="86" text-anchor="middle"
+                  font-weight="700">AZ B</text><text x="577" y="86" text-anchor="middle" font-weight="700">AZ C</text>
+                <g fill="#203652" stroke="#7899bc">
+                  <rect x="268" y="103" width="85" height="55" rx="6" />
+                  <rect x="401" y="103" width="85" height="55" rx="6" />
+                  <rect x="534" y="103" width="85" height="55" rx="6" />
+                </g><text x="311" y="135" text-anchor="middle" font-size="12">Data centers</text><text x="444" y="135"
+                  text-anchor="middle" font-size="12">Data centers</text><text x="577" y="135" text-anchor="middle"
+                  font-size="12">Data centers</text>
+              </g>
+            </svg>
+          </div>
+          <div class="callout"><strong>Remember:</strong> An edge location is not another AZ. AZ names may map
+            differently across AWS accounts.</div><label class="row"><input type="checkbox" data-task="concepts"> I can
+            explain Region, AZ, and edge location.</label>
+        </section>
+        <section id="availability" class="card">
+          <div class="eyebrow">Part 02 · 10–15 min</div>
+          <h2>High Availability ≠ Disaster Recovery</h2>
+          <p><strong>HA</strong> reduces outages from failures. <strong>DR</strong> restores service after major
+            incidents. <strong>RTO</strong> measures tolerated recovery time; <strong>RPO</strong> measures tolerated
+            data loss in time.</p>
+          <div class="grid">
+            <div class="mini"><strong>Single-AZ</strong>
+              <p>Simple, but AZ failure may take the entire API offline.</p>
+            </div>
+            <div class="mini"><strong>Multi-AZ</strong>
+              <p>API tasks across AZs and a database failover strategy reduce AZ failure impact.</p>
+            </div>
+            <div class="mini"><strong>Backup & restore</strong>
+              <p>Needed for deletion, corruption, and recovery. Multi-AZ alone is insufficient.</p>
+            </div>
+          </div>
+          <div class="callout">If an administrator deletes invoices, database replication may copy the deletion. Test
+            backups and point-in-time recovery.</div><label class="row"><input type="checkbox" data-task="availability">
+            I can distinguish HA, DR, RTO, and RPO.</label>
+        </section>
+        <section id="security" class="card">
+          <div class="eyebrow">Part 03 · 15–20 min</div>
+          <h2>Shared Responsibility</h2>
+          <div class="mini" style="border-color:#6c9dca;margin-bottom:10px"><strong style="color:var(--cyan)">CUSTOMER ·
+              Security IN the cloud</strong>
+            <p>Application code, IAM permissions, data, security configurations, dependency patching.</p>
+          </div>
+          <div class="mini" style="border-color:#4c987d"><strong style="color:var(--green)">AWS · Security OF the
+              cloud</strong>
+            <p>Physical facilities, underlying hardware, core infrastructure and service-specific managed layers.</p>
+          </div>
+          <p class="small muted">Service boundary matters: EC2 customers manage guest OS patching; managed services like
+            Lambda shift more infrastructure work to AWS.</p><label class="row"><input type="checkbox"
+              data-task="security"> I can explain the responsibility split for EC2, S3, RDS, and Lambda.</label>
+        </section>
+        <section id="exercises" class="card">
+          <div class="eyebrow">Part 04 · 20–35 min</div>
+          <h2>Hands-on Exercises</h2>
+          <h3>Exercise A · Select a Region <span class="pill">5 min</span></h3>
+          <p class="muted">95% of users are in Vietnam. Your ERP stores invoices and customer information. Choose a
+            Region candidate and justify latency, availability, compliance, and cost.</p>
+          <div class="row" id="regionChoices"><label class="option"><input type="radio" name="region" value="Singapore"
+                checked> Singapore</label><label class="option"><input type="radio" name="region" value="Tokyo">
+              Tokyo</label><label class="option"><input type="radio" name="region" value="N. Virginia"> N.
+              Virginia</label></div><textarea id="regionReason" aria-label="Region justification"
+            placeholder="My decision and validation plan: latency, availability, compliance, cost..."></textarea>
+          <div class="row" style="margin-top:10px"><button class="btn secondary" id="regionHint">Show decision
+              guidance</button><button class="btn secondary" id="saveRegion">Save decision</button></div>
+          <div id="regionAnswer" class="answer">A strong first candidate is <strong>Singapore (ap-southeast-1)</strong>,
+            pending real latency benchmarks, legal review for cross-border personal data, and region-specific pricing.
+            Other Regions may still be justified by constraints. Your decision should identify evidence, not claim
+            guaranteed latency or compliance.</div>
+          <p id="regionSaved" class="small muted" aria-live="polite"></p>
+          <hr style="border:0;border-top:1px solid var(--line);margin:25px 0">
+          <h3>Exercise B · Design Multi-AZ ERP <span class="pill">7 min</span></h3>
+          <p class="muted">Use the reference diagram to build your own architecture in diagrams.net. Include security
+            groups, private database access, and backup strategy in your notes.</p>
+          <div class="diagram" role="img"
+            aria-label="Production reference architecture with two AZs, two NestJS tasks, an application load balancer, RDS primary and standby, and S3">
+            <svg viewBox="0 0 680 330">
+              <rect class="region" x="12" y="6" width="656" height="316" rx="14" /><text x="30" y="31" font-size="16"
+                font-weight="700">Singapore · VPC (conceptual)</text>
+              <rect class="node" x="249" y="48" width="180" height="42" rx="8" /><text x="339" y="74"
+                text-anchor="middle" font-size="14">Application Load Balancer</text>
+              <path class="connector" d="M339 90 V105 H174 V137 M339 105 H505 V137" />
+              <rect class="az" x="37" y="124" width="275" height="172" rx="10" />
+              <rect class="az" x="368" y="124" width="275" height="172" rx="10" /><text x="54" y="148"
+                font-weight="700">AZ A</text><text x="385" y="148" font-weight="700">AZ B</text>
+              <rect class="node" x="75" y="161" width="200" height="43" rx="7" />
+              <rect class="node" x="405" y="161" width="200" height="43" rx="7" /><text x="175" y="187"
+                text-anchor="middle">NestJS API task A</text><text x="505" y="187" text-anchor="middle">NestJS API task
+                B</text>
+              <rect class="node" x="75" y="237" width="200" height="43" rx="7" />
+              <rect class="node" x="405" y="237" width="200" height="43" rx="7" /><text x="175" y="263"
+                text-anchor="middle">RDS primary</text><text x="505" y="263" text-anchor="middle">RDS standby</text>
+              <path class="connector" d="M175 204 V237 M505 204 L280 237 M275 257 H405" /><text class="sub" x="339"
+                y="251" text-anchor="middle" font-size="10">replication</text><text class="sub" x="340" y="308"
+                text-anchor="middle" font-size="12">S3 private bucket: regional service (not tied to one AZ)</text>
+            </svg>
+          </div>
+          <div class="row"><a class="btn secondary" href="https://app.diagrams.net/" target="_blank" rel="noopener">Open
+              diagrams.net ↗</a><button class="btn secondary" id="diagramHint">Show design hints</button></div>
+          <div id="diagramAnswer" class="answer">Ensure two API tasks are in separate AZs; route only to healthy tasks;
+            place the database in private subnets; use RDS Multi-AZ failover, backups, and private S3 access. The
+            reference is simplified and does not show all network routes or service endpoints.</div><label
+            class="row"><input type="checkbox" data-task="diagram"> I completed my ERP Multi-AZ diagram.</label>
+          <hr style="border:0;border-top:1px solid var(--line);margin:25px 0">
+          <h3>Exercise C · Who owns security? <span class="pill">3 min</span></h3>
+          <div id="responsibility"></div><button class="btn secondary" id="checkResponsibility">Check
+            responsibilities</button>
+          <div id="responsibilityResult" class="feedback hidden" aria-live="polite"></div>
+        </section>
+        <section id="quiz" class="card">
+          <div class="eyebrow">Part 05 · 35–45 min</div>
+          <h2>Knowledge Check</h2>
+          <p class="muted">Answer all five questions. Submit to reveal the correct answers and explanations. Passing
+            score: 4/5.</p>
+          <div id="quizQuestions"></div>
+          <div class="row"><button class="btn" id="submitQuiz">Submit quiz</button><button class="btn secondary"
+              id="resetQuiz">Reset quiz</button></div>
+          <div id="quizResult" class="feedback hidden" aria-live="polite"></div>
+        </section>
+        <section id="deliverables" class="card">
+          <div class="eyebrow">Part 06 · Definition of Done</div>
+          <h2>Deliverables & Checklist</h2>
+          <p>Complete these artifacts before moving on. Your progress is stored in this browser when local storage is
+            available.</p>
+          <div class="checklist"><label><input type="checkbox" data-task="notes"> Read <code>day-01-notes.md</code> and
+              understand the core concepts.</label><label><input type="checkbox" data-task="adr"> Write
+              <code>docs/adr/ADR-001-region-selection.md</code> with validation steps.</label><label><input
+                type="checkbox" data-task="artifact"> Save <code>docs/architecture/erp-multi-az.drawio</code> with two
+              AZs and failover.</label></div>
+          <div class="row" style="margin-top:18px"><button class="btn secondary" id="exportProgress">Export progress
+              (.md)</button><button class="btn secondary" id="resetProgress">Clear saved progress</button></div>
+        </section>
+        <section id="next" class="card next">
+          <div class="eyebrow">Up next · Week 01 / Day 02 · 60 min</div>
+          <h2>AWS Account, MFA, IAM & CLI</h2>
+          <p>Set up a new account safely, understand IAM Identity Center, configure CLI credentials, and establish
+            billing guardrails before using AWS services.</p>
+          <p class="small muted">The next-day lesson file will be created after you review Day 01. No broken link or
+            placeholder lesson is included.</p><button class="btn" id="nextDay">Preview next-day deliverables →</button>
+          <div id="nextPreview" class="answer"><strong>Day 02 outputs:</strong> <code>day-02-notes.md</code>,
+            <code>day-02.html</code>, CLI profile setup checklist, account security baseline, and a zero-cost IAM
+            exercise. Day 02 will not be marked complete automatically.
+          </div>
+        </section>
+      </main>
+    </div>
+    <footer class="footer">Quang Pham - AWS Training · Week 01 Day 01 · Offline-ready interactive exercises · No
+      external JS/CSS
+      dependencies · <a href="https://aws.amazon.com/compliance/shared-responsibility-model/" target="_blank"
+        rel="noopener">AWS official documentation ↗</a></footer>
+  </div>
+  <script>
+    (() => { 'use strict'; const KEY = 'aws-training-w01-d01-v1'; let state = { tasks: {}, region: '', reason: '', quiz: {}, responsibility: {}, quizSubmitted: false }; try { const saved = JSON.parse(localStorage.getItem(KEY) || 'null'); if (saved && typeof saved === 'object') state = { ...state, ...saved } } catch (e) { } const $ = id => document.getElementById(id), save = () => { try { localStorage.setItem(KEY, JSON.stringify(state)) } catch (e) { } updateProgress() }, tasks = ['concepts', 'availability', 'security', 'diagram', 'notes', 'adr', 'artifact', 'quiz']; function updateProgress() { const n = tasks.filter(t => state.tasks[t]).length; $('progressFill').style.width = (n / tasks.length * 100) + '%'; $('progressText').textContent = `${n} of ${tasks.length} tasks complete`; } document.querySelectorAll('[data-task]').forEach(input => { input.checked = !!state.tasks[input.dataset.task]; input.addEventListener('change', () => { state.tasks[input.dataset.task] = input.checked; save() }) }); const responsibilities = [['Patch a vulnerable NestJS dependency', 'Customer', 'Application dependencies are customer-managed.'], ['Protect the physical AWS data center', 'AWS', 'AWS secures physical infrastructure.'], ['Configure S3 bucket permissions', 'Customer', 'The customer controls access policies.'], ['Replace failed EC2 host hardware', 'AWS', 'AWS maintains the underlying physical hardware.']]; $('responsibility').innerHTML = responsibilities.map((r, i) => `<div class="question"><strong>${i + 1}. ${r[0]}</strong><div class="row" style="margin-top:8px"><label class="option"><input type="radio" name="resp${i}" value="AWS"> AWS</label><label class="option"><input type="radio" name="resp${i}" value="Customer"> Customer</label></div><div class="feedback hidden" id="respFeedback${i}"></div></div>`).join(''); responsibilities.forEach((r, i) => { document.querySelectorAll(`[name="resp${i}"]`).forEach(input => { input.checked = state.responsibility[i] === input.value; input.addEventListener('change', () => { state.responsibility[i] = input.value; save(); $('respFeedback' + i).classList.add('hidden') }) }) }); $('checkResponsibility').addEventListener('click', () => { let score = 0; responsibilities.forEach((r, i) => { const ok = state.responsibility[i] === r[1]; if (ok) score++; const el = $('respFeedback' + i); el.classList.remove('hidden'); el.textContent = `${ok ? '✓ Correct' : '✕ Correct answer: ' + r[1]}. ${r[2]}`; el.style.color = ok ? 'var(--green)' : 'var(--red)' }); const out = $('responsibilityResult'); out.classList.remove('hidden'); out.textContent = `Responsibility score: ${score}/4. ${score === 4 ? 'Excellent.' : 'Review the explanations and retry.'}` }); const quiz = [{ q: 'What does an AWS Region contain?', options: ['Exactly one EC2 instance', 'Multiple Availability Zones', 'One S3 bucket only', 'One load balancer only'], correct: 1, why: 'A Region contains multiple isolated AZs.' }, { q: 'Which design is more resilient to a single-AZ outage?', options: ['One EC2 in AZ A', 'Two EC2 instances in AZ A', 'API instances across AZ A and B behind a load balancer', 'One database in AZ A'], correct: 2, why: 'Multi-AZ application capacity reduces the impact of one AZ failing.' }, { q: 'Who is responsible for securing application code on EC2?', options: ['AWS', 'Customer', 'The ISP', 'Nobody'], correct: 1, why: 'The customer owns application security and guest OS management on EC2.' }, { q: 'What is a common purpose of an edge location?', options: ['Run every RDS primary', 'Deliver cached content closer to users', 'Replace all Availability Zones', 'Host every EC2 instance'], correct: 1, why: 'CloudFront edge locations help serve content closer to users.' }, { q: 'Does RDS Multi-AZ automatically protect against all accidental data deletions?', options: ['Yes', 'No'], correct: 1, why: 'Replicated deletions can affect both primary and standby. Backups and recovery procedures remain necessary.' }]; function renderQuiz() { $('quizQuestions').innerHTML = quiz.map((q, i) => `<div class="question"><fieldset><legend>${i + 1}. ${q.q}</legend>${q.options.map((o, j) => `<label class="option"><input type="radio" name="q${i}" value="${j}"> ${o}</label>`).join('')}</fieldset><div class="feedback hidden" id="quizFeedback${i}"></div></div>`).join(''); quiz.forEach((q, i) => document.querySelectorAll(`[name="q${i}"]`).forEach(input => { input.checked = state.quiz[i] === input.value; input.addEventListener('change', () => { state.quiz[i] = input.value; state.quizSubmitted = false; state.tasks.quiz = false; document.querySelectorAll('[id^="quizFeedback"]').forEach(el => el.classList.add('hidden')); $('quizResult').classList.add('hidden'); save() }) })); if (state.quizSubmitted) showQuizResult() } function showQuizResult() { let score = 0; quiz.forEach((q, i) => { const ok = Number(state.quiz[i]) === q.correct; if (ok) score++; const el = $('quizFeedback' + i); el.classList.remove('hidden'); el.innerHTML = `<strong class="${ok ? 'good' : 'bad'}">${ok ? '✓ Correct' : '✕ Not quite'}</strong> · Correct answer: ${q.options[q.correct]}. ${q.why}` }); const result = $('quizResult'); result.classList.remove('hidden'); result.innerHTML = `<strong>${score}/5 · ${score >= 4 ? 'Passed' : 'Keep practicing'}</strong><br>${score >= 4 ? 'You met the Day 01 quiz target.' : 'Review the explanations and try again.'}`; state.tasks.quiz = score >= 4; save() } $('submitQuiz').addEventListener('click', () => { if (quiz.some((q, i) => state.quiz[i] === undefined)) { alert('Please answer all five questions first.'); return } state.quizSubmitted = true; showQuizResult() }); $('resetQuiz').addEventListener('click', () => { state.quiz = {}; state.quizSubmitted = false; state.tasks.quiz = false; $('quizResult').classList.add('hidden'); renderQuiz(); save() }); $('regionHint').addEventListener('click', () => $('regionAnswer').classList.toggle('visible')); $('diagramHint').addEventListener('click', () => $('diagramAnswer').classList.toggle('visible')); $('saveRegion').addEventListener('click', () => { state.region = document.querySelector('[name="region"]:checked').value; state.reason = $('regionReason').value; save(); $('regionSaved').textContent = 'Saved in this browser. Export progress to preserve your notes.' }); $('regionReason').value = state.reason || ''; if (state.region) { const radio = document.querySelector(`[name="region"][value="${state.region}"]`); if (radio) radio.checked = true } $('nextDay').addEventListener('click', () => $('nextPreview').classList.toggle('visible')); function download(name, content) { const blob = new Blob([content], { type: 'text/markdown;charset=utf-8' }); const url = URL.createObjectURL(blob); const a = document.createElement('a'); a.href = url; a.download = name; a.click(); setTimeout(() => URL.revokeObjectURL(url), 1000) } $('exportProgress').addEventListener('click', () => { const count = tasks.filter(t => state.tasks[t]).length; download('day-01-progress.md', `# AWS Week 01 Day 01 — Progress\n\nCompleted: ${count}/${tasks.length}\n\n${tasks.map(t => `- [${state.tasks[t] ? 'x' : ' '}] ${t}`).join('\n')}\n\n## Region decision\n\nSelected: ${state.region || 'Not saved'}\n\n${state.reason || 'No rationale recorded'}\n\n## Quiz\n\n${quiz.map((q, i) => `${i + 1}. ${q.q}\n   Answer: ${q.options[Number(state.quiz[i])] || 'Not answered'}`).join('\n')}\n`) }); $('resetProgress').addEventListener('click', () => { if (confirm('Clear all saved progress for Day 01?')) { try { localStorage.removeItem(KEY) } catch (e) { } location.reload() } }); renderQuiz(); updateProgress(); })();
+  </script>
+</body>
+
+</html>

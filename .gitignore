@@ -1,0 +1,107 @@
+# ==============================================================================
+# OS Generated Files
+# ==============================================================================
+.DS_Store
+.DS_Store?
+._*
+.Spotlight-V100
+.Trashes
+ehthumbs.db
+Thumbs.db
+[Dd]esktop.ini
+
+# ==============================================================================
+# Environment Variables & Secrets (CRITICAL FOR AWS)
+# ==============================================================================
+.env
+.env.*
+!.env.example
+*.pem
+*.key
+*.pub
+*.pfx
+*.p12
+credentials
+aws-credentials*
+*.id_rsa
+*.id_ed25519
+
+# ==============================================================================
+# Node.js / NestJS / TypeScript
+# ==============================================================================
+node_modules/
+dist/
+build/
+out/
+.npm/
+.yarn/
+*.tsbuildinfo
+npm-debug.log*
+yarn-debug.log*
+yarn-error.log*
+pnpm-debug.log*
+lerna-debug.log*
+
+# ==============================================================================
+# Testing & Coverage
+# ==============================================================================
+coverage/
+.nyc_output/
+*.lcov
+
+# ==============================================================================
+# AWS CDK & Serverless Framework
+# ==============================================================================
+cdk.out/
+.cdk.staging/
+cdk.context.json
+.serverless/
+.webpack/
+.aws-sam/
+
+# ==============================================================================
+# Terraform (Week 9 IaC)
+# ==============================================================================
+**/.terraform/*
+*.tfstate
+*.tfstate.*
+crash.log
+crash.*.log
+override.tf
+override.tf.json
+*_override.tf
+*_override.tf.json
+.terraformrc
+terraform.rc
+
+# ==============================================================================
+# LocalStack / Docker / Databases Local Data
+# ==============================================================================
+.localstack/
+*.sqlite
+*.db
+docker-data/
+postgres-data/
+
+# ==============================================================================
+# IDEs & Text Editors
+# ==============================================================================
+.idea/
+*.sublime-project
+*.sublime-workspace
+*.swp
+*.swo
+*~
+# Keep .vscode/settings.json, but ignore personal workspace state
+.vscode/*
+!.vscode/settings.json
+!.vscode/extensions.json
+!.vscode/launch.json
+
+# ==============================================================================
+# Logs & Temporary Files
+# ==============================================================================
+logs/
+*.log
+tmp/
+temp/
